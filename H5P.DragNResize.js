@@ -38,7 +38,17 @@ H5P.DragNResize = (function ($) {
       instance: this
     };
 
-    H5P.$body.bind('mouseup', eventData, C.release).bind('mouseleave', eventData, C.release).css({'-moz-user-select': 'none', '-webkit-user-select': 'none', 'user-select': 'none', '-ms-user-select': 'none'}).mousemove(eventData, C.move).attr('unselectable', 'on')[0].onselectstart = function () {
+    H5P.$body.bind('mouseup', eventData, C.release)
+    .bind('mouseleave', eventData, C.release)
+    .css({
+      '-moz-user-select': 'none',
+      '-webkit-user-select': 'none',
+      'user-select': 'none',
+      '-ms-user-select': 'none'
+    })
+    .mousemove(eventData, C.move)
+    .attr('unselectable', 'on')[0]
+    .onselectstart = function () {
       return false;
     };
 
