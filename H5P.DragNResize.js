@@ -70,6 +70,11 @@ H5P.DragNResize = (function ($) {
     that.newWidth = that.startWidth + event.clientX - that.startX;
     that.newHeight = that.startHeight + event.clientY - that.startY;
 
+    if (that.snap !== undefined) {
+      that.newWidth = Math.round(that.newWidth / that.snap) * that.snap;
+      that.newHeight = Math.round(that.newHeight / that.snap) * that.snap;
+    }
+
     if (that.newWidth < that.containerEm) {
       // Make sure our width is not to small.
       that.newWidth = that.containerEm;
