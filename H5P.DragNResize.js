@@ -59,7 +59,7 @@ H5P.DragNResize = (function ($) {
     this.left = parseInt(this.$element.css('left'));
     this.top = parseInt(this.$element.css('top'));
 
-    this.containerEm = parseInt(this.$container.css('fontSize'));
+    this.containerEm = parseInt(this.$element.css('fontSize'));
     this.containerWidth = this.$container.width();
     this.containerHeight = this.$container.height();
   };
