@@ -48,7 +48,7 @@ H5P.DragNResize = (function ($) {
     })
     .mousemove(eventData, C.move)
     .attr('unselectable', 'on')[0]
-    .onselectstart = function () {
+    .onselectstart = H5P.$body[0].ondragstart = function () {
       return false;
     };
 
@@ -123,7 +123,7 @@ H5P.DragNResize = (function ($) {
       '-ms-user-select': ''
     })
     .removeAttr('unselectable')[0]
-    .onselectstart = null;
+    .onselectstart = H5P.$body[0].ondragstart = null;
 
     if (that.resizeCallback !== undefined) {
       that.resizeCallback(that.newWidth, that.newHeight);
