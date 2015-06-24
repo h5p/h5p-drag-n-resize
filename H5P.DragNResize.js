@@ -36,11 +36,14 @@ H5P.DragNResize = (function ($) {
    * Gives the given element a resize handle.
    *
    * @param {H5P.jQuery} $element
+   * @param {Object} [options]
+   * @param {boolean} [options.lock]
    */
-  C.prototype.add = function ($element) {
+  C.prototype.add = function ($element, options) {
     var that = this;
 
     $('<div class="h5p-dragnresize-handle"></div>').appendTo($element).mousedown(function (event) {
+      that.lock = (options && options.lock);
       that.$element = $element;
       that.press(event.clientX, event.clientY);
 
@@ -102,7 +105,8 @@ H5P.DragNResize = (function ($) {
       that.newHeight = Math.round(that.newHeight / that.snap) * that.snap;
     }
 
-    if (that.lock && !that.revertLock) {
+    var lock = (that.revertLock ? !that.lock : that.lock);
+    if (lock) {
       // Make sure ratio is the same
       var newRatio = (that.newWidth / that.newHeight);
       if (that.ratio < newRatio) {
