@@ -1,30 +1,32 @@
 div:focus > .h5p-dragnresize-handle {
   position: absolute;
-  top: -5px;
-  left: -5px;
+  top: -4px;
+  left: -4px;
   width: 7px;
   height: 7px;
   cursor: nwse-resize;
   border: 1px solid #0099ff;
+  background-color: #fff;
+  z-index: 1;
 }
 
 div:focus > .h5p-dragnresize-handle.ne {
   left: auto;
-  right: -5px;
+  right: -4px;
   cursor: nesw-resize;
 }
 
 div:focus > .h5p-dragnresize-handle.sw {
   top: auto;
-  bottom: -5px;
+  bottom: -4px;
   cursor: nesw-resize;
 }
 
 div:focus > .h5p-dragnresize-handle.se {
   top: auto;
   left: auto;
-  bottom: -5px;
-  right: -5px;
+  bottom: -4px;
+  right: -4px;
 }
 
 div:focus > .h5p-dragnresize-handle.n {
@@ -40,14 +42,14 @@ div:focus > .h5p-dragnresize-handle.w {
 div:focus > .h5p-dragnresize-handle.e {
   top: calc(50% - 3px);
   left: auto;
-  right: -5px;
+  right: -4px;
   cursor: ew-resize;
 }
 
 div:focus > .h5p-dragnresize-handle.s {
   top: auto;
   left: auto;
-  bottom: -5px;
+  bottom: -4px;
   right: calc(50% - 3px);
   cursor: ns-resize;
 }
