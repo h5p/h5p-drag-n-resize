@@ -179,7 +179,7 @@ H5P.DragNResize = (function ($) {
   /**
    * Convert px value to number.
    *
-   * @param {string} px
+   * @param {string} px
    * @returns {Number}
    */
   var pxToNum = function (px) {
