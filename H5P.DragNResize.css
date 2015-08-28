@@ -1,3 +1,4 @@
+.h5p-dragnbar-element.focused > .h5p-dragnresize-handle,
 div:focus > .h5p-dragnresize-handle {
   position: absolute;
   top: -4px;
@@ -10,18 +11,21 @@ div:focus > .h5p-dragnresize-handle {
   z-index: 1;
 }
 
+.h5p-dragnbar-element.focused > .h5p-dragnresize-handle.ne,
 div:focus > .h5p-dragnresize-handle.ne {
   left: auto;
   right: -4px;
   cursor: nesw-resize;
 }
 
+.h5p-dragnbar-element.focused > .h5p-dragnresize-handle.sw,
 div:focus > .h5p-dragnresize-handle.sw {
   top: auto;
   bottom: -4px;
   cursor: nesw-resize;
 }
 
+.h5p-dragnbar-element.focused > .h5p-dragnresize-handle.se,
 div:focus > .h5p-dragnresize-handle.se {
   top: auto;
   left: auto;
@@ -29,16 +33,19 @@ div:focus > .h5p-dragnresize-handle.se {
   right: -4px;
 }
 
+.h5p-dragnbar-element.focused > .h5p-dragnresize-handle.n,
 div:focus > .h5p-dragnresize-handle.n {
   left: calc(50% - 3px);
   cursor: ns-resize;
 }
 
+.h5p-dragnbar-element.focused > .h5p-dragnresize-handle.w,
 div:focus > .h5p-dragnresize-handle.w {
   top: calc(50% - 3px);
   cursor: ew-resize;
 }
 
+.h5p-dragnbar-element.focused > .h5p-dragnresize-handle.e,
 div:focus > .h5p-dragnresize-handle.e {
   top: calc(50% - 3px);
   left: auto;
@@ -46,6 +53,7 @@ div:focus > .h5p-dragnresize-handle.e {
   cursor: ew-resize;
 }
 
+.h5p-dragnbar-element.focused > .h5p-dragnresize-handle.s,
 div:focus > .h5p-dragnresize-handle.s {
   top: auto;
   left: auto;
