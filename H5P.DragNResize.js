@@ -45,15 +45,9 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    * @param {H5P.jQuery} $element
    * @param {Object} [options]
    * @param {boolean} [options.lock]
-   * @param {boolean} [options.disableResize]
    */
   C.prototype.add = function ($element, options) {
     var that = this;
-
-    // Resize disabled
-    if (options && options.disableResize) {
-      return;
-    }
 
     // Array with position of handles
     var cornerPositions = ['nw', 'ne', 'sw', 'se'];
@@ -152,14 +146,16 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     // Moving west
     if (moveW) {
       that.newLeft = that.left - deltaX;
-    } else if (!movesVertical) {
+    }
+    else if (!movesVertical) {
       that.newWidth = that.startWidth - deltaX;
     }
 
     // Moving north
     if (moveN) {
       that.newTop = that.top - deltaY;
-    } else if (!movesHorizontal) {
+    }
+    else if (!movesHorizontal) {
       that.newHeight = that.startHeight - deltaY;
     }
 
@@ -176,14 +172,17 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       if (that.newLeft < 0) {
         that.newLeft = 0;
         that.newWidth = that.left + that.startWidth;
-      } else if (that.startWidth + deltaX < that.containerEm) {
+      }
+      else if (that.startWidth + deltaX < that.containerEm) {
         // Element too small, keep current size
         that.newLeft = that.left + that.startWidth - that.containerEm;
         that.newWidth = that.containerEm;
-      } else {
+      }
+      else {
         that.newWidth = that.startWidth + deltaX;
       }
-    } else if (!movesVertical) {
+    }
+    else if (!movesVertical) {
       if (that.left + that.newWidth > that.containerWidth) {
         that.newWidth = that.containerWidth - that.left;
       }
@@ -193,14 +192,17 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       if (that.newTop < 0) {
         that.newTop = 0;
         that.newHeight = that.top + that.startHeight;
-      } else if (that.startHeight + deltaY < that.containerEm) {
+      }
+      else if (that.startHeight + deltaY < that.containerEm) {
         // Element not high enough, keep min size
         that.newTop = that.top + that.startHeight - that.containerEm;
         that.newHeight = that.containerEm;
-      } else {
+      }
+      else {
         that.newHeight = that.startHeight + deltaY;
       }
-    } else if (!movesHorizontal) {
+    }
+    else if (!movesHorizontal) {
       if (that.top + that.newHeight > that.containerHeight) {
         that.newHeight = that.containerHeight - that.top;
       }
@@ -242,7 +244,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     // Expand to longest edge
     if (this.newWidth / this.startWidth > this.newHeight / this.startHeight) {
       this.newHeight = this.newWidth / this.ratio;
-    } else {
+    }
+    else {
       this.newWidth = this.newHeight * this.ratio;
     }
 
@@ -256,7 +259,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
         this.newHeight = this.top + this.startHeight;
         this.newWidth = this.newHeight * this.ratio;
       }
-    } else {
+    }
+    else {
       // Too wide
       if (this.newHeight > this.containerHeight) {
         this.newHeight = this.containerHeight;
@@ -273,7 +277,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
         this.newWidth = this.left + this.startWidth;
         this.newHeight = this.newWidth / this.ratio;
       }
-    } else {
+    }
+    else {
       // Too wide
       if (this.newWidth > this.containerWidth) {
         this.newWidth = this.containerWidth;
