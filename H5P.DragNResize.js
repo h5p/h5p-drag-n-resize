@@ -222,10 +222,10 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     }
 
     that.$element.css({
-      width: that.newWidth + 'px',
-      height: that.newHeight + 'px',
-      left: that.newLeft + 'px',
-      top: that.newTop + 'px'
+      width: (that.newWidth / that.containerEm) + 'em',
+      height: (that.newHeight / that.containerEm) + 'em',
+      left: ((that.newLeft / that.containerWidth) * 100) + '%',
+      top: ((that.newTop / that.containerHeight) * 100) + '%'
     });
 
     that.trigger('moveResizing');
