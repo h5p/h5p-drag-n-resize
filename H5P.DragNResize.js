@@ -211,6 +211,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     // Apply ratio lock
     var lock = (that.revertLock ? !that.lock : that.lock);
     if (lock) {
+      console.log("locking dimensions!");
       that.lockDimensions(moveW, moveN);
     }
 
@@ -261,9 +262,9 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       }
     }
     else {
-      // Too wide
-      if (this.newHeight > this.containerHeight) {
-        this.newHeight = this.containerHeight;
+      // Too high
+      if (this.top + this.newHeight > this.containerHeight) {
+        this.newHeight = this.containerHeight - this.top;
         this.newWidth = this.newHeight * this.ratio;
       }
     }
@@ -280,8 +281,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     }
     else {
       // Too wide
-      if (this.newWidth > this.containerWidth) {
-        this.newWidth = this.containerWidth;
+      if (this.left + this.newWidth > this.containerWidth) {
+        this.newWidth = this.containerWidth - this.left;
         this.newHeight = this.newWidth / this.ratio;
       }
     }
