@@ -331,7 +331,12 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     .onselectstart = H5P.$body[0].ondragstart = null;
 
     // Stopped resizing send width and height in Ems
-    that.trigger('stoppedResizing', {width: that.newWidth / that.containerEm, height: that.newHeight / that.containerEm});
+    that.trigger('stoppedResizing', {
+      left: that.left,
+      top: that.top,
+      width: that.newWidth / that.containerEm,
+      height: that.newHeight / that.containerEm
+    });
 
     // Refocus element after resizing it. Apply timeout since focus is lost at the end of mouse event.
     setTimeout(function () {
