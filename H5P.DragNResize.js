@@ -238,13 +238,13 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       that.newTop = that.minTop;
     }
 
-    // Min size at 1px
-    if (that.newWidth <= 1) {
-      that.newWidth = 1;
+    // Min size at 4px
+    if (that.newWidth <= 4) {
+      that.newWidth = 4;
     }
 
-    if (that.newHeight <= 1) {
-      that.newHeight = 1;
+    if (that.newHeight <= 4) {
+      that.newHeight = 4;
     }
 
     that.$element.css({
