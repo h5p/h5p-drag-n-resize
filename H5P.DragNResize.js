@@ -223,6 +223,15 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       }
     }
 
+    // Set min size
+    if (that.newWidth <= H5P.DragNResize.MIN_SIZE) {
+      that.newWidth = H5P.DragNResize.MIN_SIZE;
+    }
+
+    if (that.newHeight <= H5P.DragNResize.MIN_SIZE) {
+      that.newHeight = H5P.DragNResize.MIN_SIZE;
+    }
+
     // Apply ratio lock
     var lock = (that.revertLock ? !that.lock : that.lock);
     if (lock) {
@@ -236,15 +245,6 @@ H5P.DragNResize = (function ($, EventDispatcher) {
 
     if (moveN && event.clientY > that.startY + that.startHeight) {
       that.newTop = that.minTop;
-    }
-
-    // Set min size
-    if (that.newWidth <= H5P.DragNResize.MIN_SIZE) {
-      that.newWidth = H5P.DragNResize.MIN_SIZE;
-    }
-
-    if (that.newHeight <= H5P.DragNResize.MIN_SIZE) {
-      that.newHeight = H5P.DragNResize.MIN_SIZE;
     }
 
     that.$element.css({
@@ -270,9 +270,21 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     // Expand to longest edge
     if (movesVertical) {
       this.newWidth = this.newHeight * this.ratio;
+
+      // Make sure locked ratio does not cause size to go below min size
+      if (this.newWidth < H5P.DragNResize.MIN_SIZE) {
+        this.newWidth = H5P.DragNResize.MIN_SIZE;
+        this.newHeight = H5P.DragNResize.MIN_SIZE / this.ratio;
+      }
     }
     else if (movesHorizontal) {
       this.newHeight = this.newWidth / this.ratio;
+
+      // Make sure locked ratio does not cause size to go below min size
+      if (this.newHeight < H5P.DragNResize.MIN_SIZE) {
+        this.newHeight = H5P.DragNResize.MIN_SIZE;
+        this.newWidth = H5P.DragNResize.MIN_SIZE * this.ratio;
+      }
     }
     else if (this.newWidth / this.startWidth > this.newHeight / this.startHeight) {
       this.newHeight = this.newWidth / this.ratio;
