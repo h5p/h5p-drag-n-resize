@@ -238,13 +238,13 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       that.newTop = that.minTop;
     }
 
-    // Min size at 4px
-    if (that.newWidth <= 4) {
-      that.newWidth = 4;
+    // Set min size
+    if (that.newWidth <= H5P.DragNResize.minSize) {
+      that.newWidth = H5P.DragNResize.minSize;
     }
 
-    if (that.newHeight <= 4) {
-      that.newHeight = 4;
+    if (that.newHeight <= H5P.DragNResize.minSize) {
+      that.newHeight = H5P.DragNResize.minSize;
     }
 
     that.$element.css({
@@ -362,6 +362,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
   var pxToNum = function (px) {
     return Number(px.replace('px', ''));
   };
+
+  C.minSize = 24;
 
   return C;
 })(H5P.jQuery, H5P.EventDispatcher);
