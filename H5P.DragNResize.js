@@ -79,6 +79,20 @@ H5P.DragNResize = (function ($, EventDispatcher) {
   };
 
   /**
+   * Get paddings for the element
+   */
+  C.prototype.getElementPaddings = function () {
+    return {
+      horizontal: Number(this.$element.css('padding-left').replace("px", "")) + Number(this.$element.css('padding-right').replace("px", "")),
+      vertical: Number(this.$element.css('padding-top').replace("px", "")) + Number(this.$element.css('padding-bottom').replace("px", ""))
+    };
+  };
+
+  C.prototype.setContainerEm = function (containerEm) {
+    this.containerEm = containerEm;
+  };
+
+  /**
    * Start resizing
    *
    * @param {number} x
@@ -108,13 +122,13 @@ H5P.DragNResize = (function ($, EventDispatcher) {
 
     this.startX = x;
     this.startY = y;
-    this.startWidth = this.$element.width();
-    this.startHeight = this.$element.height();
+    this.padding = this.getElementPaddings();
+    this.startWidth = this.$element.outerWidth();
+    this.startHeight = this.$element.outerHeight();
     this.ratio = (this.startWidth / this.startHeight);
-    this.left = this.$element.position().left;
-    this.top = this.$element.position().top;
-
-    this.containerEm = pxToNum(this.$element.css('fontSize'));
+    var position = this.$element.position();
+    this.left = position.left;
+    this.top = position.top;
     this.containerWidth = this.$container.width();
     this.containerHeight = this.$container.height();
 
@@ -248,8 +262,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     }
 
     that.$element.css({
-      width: (that.newWidth / that.containerEm) + 'em',
-      height: (that.newHeight / that.containerEm) + 'em',
+      width: ((that.newWidth - that.padding.horizontal) / that.containerEm) + 'em',
+      height: ((that.newHeight - that.padding.vertical) / that.containerEm) + 'em',
       left: ((that.newLeft / that.containerWidth) * 100) + '%',
       top: ((that.newTop / that.containerHeight) * 100) + '%'
     });
