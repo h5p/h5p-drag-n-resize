@@ -125,6 +125,9 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     this.newHeight = this.startHeight;
 
     this.trigger('startResizing', eventData);
+
+    // Show transform panel
+    this.trigger('showTransformPanel');
   };
 
   /**
