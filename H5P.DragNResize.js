@@ -60,8 +60,6 @@ H5P.DragNResize = (function ($, EventDispatcher) {
         that.lock = (options && options.lock);
         that.$element = $element;
         that.press(event.clientX, event.clientY, position);
-
-        return false;
       }).data('position', position)
         .appendTo($element);
     };
@@ -100,21 +98,23 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    * @param {String} [direction] Direction of resize
    */
   C.prototype.press = function (x, y, direction) {
+    this.active = true;
     var eventData = {
       instance: this,
       direction: direction
     };
 
-    H5P.$body
+    H5P.$window
       .bind('mouseup', eventData, C.release)
-      .bind('mouseleave', eventData, C.release)
+      .mousemove(eventData, C.move);
+
+    H5P.$body
       .css({
         '-moz-user-select': 'none',
         '-webkit-user-select': 'none',
         'user-select': 'none',
         '-ms-user-select': 'none'
       })
-      .mousemove(eventData, C.move)
       .attr('unselectable', 'on')[0]
       .onselectstart = H5P.$body[0].ondragstart = function () {
         return false;
@@ -272,8 +272,6 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     });
 
     that.trigger('moveResizing');
-
-    return false;
   };
 
   /**
@@ -355,23 +353,26 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    */
   C.release = function (event) {
     var that = event.data.instance;
+    that.active = false;
 
-    H5P.$body.unbind('mousemove', C.move)
-    .unbind('mouseleave', C.release)
-    .unbind('mouseup', C.release)
-    .css({
-      '-moz-user-select': '',
-      '-webkit-user-select': '',
-      'user-select': '',
-      '-ms-user-select': ''
-    })
-    .removeAttr('unselectable')[0]
-    .onselectstart = H5P.$body[0].ondragstart = null;
+    H5P.$window
+      .unbind('mouseup', C.release)
+      .unbind('mousemove', C.move);
+
+    H5P.$body
+      .css({
+        '-moz-user-select': '',
+        '-webkit-user-select': '',
+        'user-select': '',
+        '-ms-user-select': ''
+      })
+      .removeAttr('unselectable')[0]
+      .onselectstart = H5P.$body[0].ondragstart = null;
 
     // Stopped resizing send width and height in Ems
     that.trigger('stoppedResizing', {
-      left: that.left,
-      top: that.top,
+      left: that.newLeft,
+      top: that.newTop,
       width: that.newWidth / that.containerEm,
       height: that.newHeight / that.containerEm
     });
