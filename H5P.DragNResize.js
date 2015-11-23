@@ -255,15 +255,6 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       that.lockDimensions(moveW, moveN, movesVertical, movesHorizontal);
     }
 
-    // Fixes fast drags outside the canvas normalizing to smallest pos.
-    if (moveW && event.clientX > that.startX + that.startWidth) {
-      that.newLeft = that.minLeft;
-    }
-
-    if (moveN && event.clientY > that.startY + that.startHeight) {
-      that.newTop = that.minTop;
-    }
-
     that.$element.css({
       width: ((that.newWidth - that.padding.horizontal) / that.containerEm) + 'em',
       height: ((that.newHeight - that.padding.vertical) / that.containerEm) + 'em',
