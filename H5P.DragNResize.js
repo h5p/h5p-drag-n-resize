@@ -271,7 +271,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     var width = that.newWidth;
     var height = that.newHeight;
     if (that.$element.css('boxSizing') !== 'border-box') {
-      width -= width - that.padding.horizontal - that.borders.horizontal;
+      width = width - that.padding.horizontal - that.borders.horizontal;
       height = height - that.padding.vertical - that.borders.vertical;
     }
 
