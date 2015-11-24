@@ -267,9 +267,17 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       that.lockDimensions(moveW, moveN, movesVertical, movesHorizontal);
     }
 
+    // Reduce size by padding and borders
+    var width = that.newWidth;
+    var height = that.newHeight;
+    if (that.$element.css('boxSizing') !== 'border-box') {
+      width -= width - that.padding.horizontal - that.borders.horizontal;
+      height = height - that.padding.vertical - that.borders.vertical;
+    }
+
     that.$element.css({
-      width: ((that.newWidth - that.padding.horizontal - that.borders.horizontal) / that.containerEm) + 'em',
-      height: ((that.newHeight - that.padding.vertical - that.borders.vertical) / that.containerEm) + 'em',
+      width: (width / that.containerEm) + 'em',
+      height: (height / that.containerEm) + 'em',
       left: ((that.newLeft / that.containerWidth) * 100) + '%',
       top: ((that.newTop / that.containerHeight) * 100) + '%'
     });
