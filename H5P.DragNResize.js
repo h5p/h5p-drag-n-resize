@@ -86,6 +86,17 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     };
   };
 
+  /**
+   * Get borders for the element
+   * @returns {{horizontal: number, vertical: number}}
+   */
+  C.prototype.getElementBorders = function () {
+    return {
+      horizontal: Number(this.$element.css('border-left-width').replace('px', '')) + Number(this.$element.css('border-right-width').replace('px', '')),
+      vertical: Number(this.$element.css('border-top-width').replace('px', '')) + Number(this.$element.css('border-bottom-width').replace('px', ''))
+    }
+  };
+
   C.prototype.setContainerEm = function (containerEm) {
     this.containerEm = containerEm;
   };
@@ -123,6 +134,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     this.startX = x;
     this.startY = y;
     this.padding = this.getElementPaddings();
+    this.borders = this.getElementBorders();
     this.startWidth = this.$element.outerWidth();
     this.startHeight = this.$element.outerHeight();
     this.ratio = (this.startWidth / this.startHeight);
@@ -256,8 +268,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     }
 
     that.$element.css({
-      width: ((that.newWidth - that.padding.horizontal) / that.containerEm) + 'em',
-      height: ((that.newHeight - that.padding.vertical) / that.containerEm) + 'em',
+      width: ((that.newWidth - that.padding.horizontal - that.borders.horizontal) / that.containerEm) + 'em',
+      height: ((that.newHeight - that.padding.vertical - that.borders.vertical) / that.containerEm) + 'em',
       left: ((that.newLeft / that.containerWidth) * 100) + '%',
       top: ((that.newTop / that.containerHeight) * 100) + '%'
     });
