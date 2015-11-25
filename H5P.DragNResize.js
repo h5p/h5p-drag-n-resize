@@ -170,22 +170,34 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     var movesVertical = (direction === 'n' || direction === 's');
     var deltaX = that.startX - event.clientX;
     var deltaY = that.startY - event.clientY;
-    if (that.snap && !that.revertSnap) {
-      deltaX = Math.floor(deltaX / that.snap) * that.snap;
-      deltaY = Math.floor(deltaY / that.snap) * that.snap;
-    }
 
-    that.minLeft = that.left + that.startWidth - that.containerEm;
-    that.minTop = that.top + that.startHeight - that.containerEm;
+    that.minLeft = that.left + that.startWidth - H5P.DragNResize.MIN_SIZE;
+    that.minTop = that.top + that.startHeight - H5P.DragNResize.MIN_SIZE;
 
     // Moving west
     if (moveW) {
       that.newLeft = that.left - deltaX;
       that.newWidth = that.startWidth + deltaX;
 
+      // Check edge cases
+      if (that.newLeft < 0) {
+        that.newLeft = 0;
+        that.newWidth = that.left + that.startWidth;
+      }
+      else if (that.newLeft > that.minLeft) {
+        that.newLeft = that.minLeft;
+        that.newWidth = that.left - that.minLeft + that.startWidth;
+      }
+
       // Snap west side
       if (that.snap && !that.revertSnap) {
         that.newLeft = Math.round(that.newLeft / that.snap) * that.snap;
+
+        // Make sure element does not snap east
+        if (that.newLeft > that.minLeft) {
+          that.newLeft = Math.floor(that.minLeft / that.snap) * that.snap;
+        }
+
         that.newWidth = (that.left - that.newLeft) + that.startWidth;
       }
     }
@@ -196,15 +208,36 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       if (that.snap && !that.revertSnap) {
         that.newWidth = Math.round(that.newWidth / that.snap) * that.snap;
       }
+
+      if (that.left + that.newWidth > that.containerWidth) {
+        that.newWidth = that.containerWidth - that.left;
+      }
     }
 
     // Moving north
     if (moveN) {
       that.newTop = that.top - deltaY;
       that.newHeight = that.startHeight + deltaY;
+
+      // Check edge cases
+      if (that.newTop < 0) {
+        that.newTop = 0;
+        that.newHeight = that.top + that.startHeight;
+      }
+      else if (that.newTop > that.minTop) {
+        that.newTop = that.minTop;
+        that.newHeight = that.top - that.minTop + that.startHeight;
+      }
+
       // Snap north
       if (that.snap && !that.revertSnap) {
         that.newTop = Math.round(that.newTop / that.snap) * that.snap;
+
+        // Make sure element does not snap south
+        if (that.newTop > that.minTop) {
+          that.newTop = Math.floor(that.minTop / that.snap) * that.snap;
+        }
+
         that.newHeight = (that.top - that.newTop) + that.startHeight;
       }
     }
@@ -215,38 +248,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       if (that.snap && !that.revertSnap) {
         that.newHeight = Math.round(that.newHeight / that.snap) * that.snap;
       }
-    }
 
-    // Check edge cases
-    if (moveW) {
-      if (that.newLeft < 0) {
-        that.newLeft = 0;
-        that.newWidth = that.left + that.startWidth;
-      }
-      else if (that.startWidth + deltaX < that.containerEm) {
-        // Element too small, keep current size
-        that.newLeft = that.left + that.startWidth - that.containerEm;
-        that.newWidth = that.containerEm;
-      }
-    }
-    else if (!movesVertical) {
-      if (that.left + that.newWidth > that.containerWidth) {
-        that.newWidth = that.containerWidth - that.left;
-      }
-    }
-
-    if (moveN) {
-      if (that.newTop < 0) {
-        that.newTop = 0;
-        that.newHeight = that.top + that.startHeight;
-      }
-      else if (that.startHeight + deltaY < that.containerEm) {
-        // Element not high enough, keep min size
-        that.newTop = that.top + that.startHeight - that.containerEm;
-        that.newHeight = that.containerEm;
-      }
-    }
-    else if (!movesHorizontal) {
       if (that.top + that.newHeight > that.containerHeight) {
         that.newHeight = that.containerHeight - that.top;
       }
@@ -293,6 +295,22 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    * @param movesHorizontal
    */
   C.prototype.lockDimensions = function (isMovingWest, isMovingNorth, movesVertical, movesHorizontal) {
+    var self = this;
+
+    // Cap movement at top
+    var lockTop = function (isMovingNorth) {
+      if (!isMovingNorth) {
+        return;
+      }
+
+      self.newTop = self.top - (self.newHeight - self.startHeight);
+
+      // Edge case
+      if (self.newTop <= 0) {
+        self.newTop = 0;
+      }
+    };
+
     // Expand to longest edge
     if (movesVertical) {
       this.newWidth = this.newHeight * this.ratio;
@@ -313,21 +331,21 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       }
     }
     else if (this.newWidth / this.startWidth > this.newHeight / this.startHeight) {
+      // Expand to width
       this.newHeight = this.newWidth / this.ratio;
     }
     else {
+      // Expand to height
       this.newWidth = this.newHeight * this.ratio;
     }
 
     // Change top to match new height
     if (isMovingNorth) {
-      this.newTop = this.top - (this.newHeight - this.startHeight);
+      lockTop(isMovingNorth);
 
-      // Edge case
-      if (this.newTop <= 0) {
-        this.newTop = 0;
-        this.newHeight = this.top + this.startHeight;
-        this.newWidth = this.newHeight * this.ratio;
+      if (self.newTop <= 0) {
+        self.newHeight = self.top + self.startHeight;
+        self.newWidth = self.newHeight * self.ratio;
       }
     }
     else {
@@ -355,6 +373,9 @@ H5P.DragNResize = (function ($, EventDispatcher) {
         this.newHeight = this.newWidth / this.ratio;
       }
     }
+
+    // Need to re-lock top in case height changed
+    lockTop(isMovingNorth);
   };
 
   /**
