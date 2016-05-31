@@ -270,16 +270,16 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     }
 
     // Reduce size by padding and borders
-    var width = that.newWidth;
-    var height = that.newHeight;
+    that.finalWidth = that.newWidth;
+    that.finalHeight = that.newHeight;
     if (that.$element.css('boxSizing') !== 'border-box') {
-      width = width - that.padding.horizontal - that.borders.horizontal;
-      height = height - that.padding.vertical - that.borders.vertical;
+      that.finalWidth -= (that.padding.horizontal + that.borders.horizontal);
+      that.finalHeight -= (that.padding.vertical + that.borders.vertical);
     }
 
     that.$element.css({
-      width: (width / that.containerEm) + 'em',
-      height: (height / that.containerEm) + 'em',
+      width: (that.finalWidth / that.containerEm) + 'em',
+      height: (that.finalHeight / that.containerEm) + 'em',
       left: ((that.newLeft / that.containerWidth) * 100) + '%',
       top: ((that.newTop / that.containerHeight) * 100) + '%'
     });
@@ -405,8 +405,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     that.trigger('stoppedResizing', {
       left: that.newLeft,
       top: that.newTop,
-      width: that.newWidth / that.containerEm,
-      height: that.newHeight / that.containerEm
+      width: that.finalWidth / that.containerEm,
+      height: that.finalHeight / that.containerEm
     });
 
     // Refocus element after resizing it. Apply timeout since focus is lost at the end of mouse event.
