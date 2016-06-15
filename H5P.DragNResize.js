@@ -401,13 +401,16 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       .removeAttr('unselectable')[0]
       .onselectstart = H5P.$body[0].ondragstart = null;
 
-    // Stopped resizing send width and height in Ems
-    that.trigger('stoppedResizing', {
-      left: that.newLeft,
-      top: that.newTop,
-      width: that.finalWidth / that.containerEm,
-      height: that.finalHeight / that.containerEm
-    });
+    if (that.newWidth !== that.startWidth ||
+        that.newHeight !== that.startHeight) {
+      // Stopped resizing send width and height in Ems
+      that.trigger('stoppedResizing', {
+        left: that.newLeft,
+        top: that.newTop,
+        width: that.finalWidth / that.containerEm,
+        height: that.finalHeight / that.containerEm
+      });
+    }
 
     // Refocus element after resizing it. Apply timeout since focus is lost at the end of mouse event.
     setTimeout(function () {
