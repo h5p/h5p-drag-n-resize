@@ -10,11 +10,16 @@ H5P.DragNResize = (function ($, EventDispatcher) {
   function C($container) {
     var self = this;
     this.$container = $container;
+    self.disabledModifiers = false;
 
     EventDispatcher.call(this);
 
     // Override settings for snapping to grid, and locking aspect ratio.
     H5P.$body.keydown(function (event) {
+      if (self.disabledModifiers) {
+        return;
+      }
+
       if (event.keyCode === 17) {
         // Ctrl
         self.revertSnap = true;
@@ -24,6 +29,10 @@ H5P.DragNResize = (function ($, EventDispatcher) {
         self.revertLock = true;
       }
     }).keyup(function (event) {
+      if (self.disabledModifiers) {
+        return;
+      }
+
       if (event.keyCode === 17) {
         // Ctrl
         self.revertSnap = false;
@@ -416,6 +425,14 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     setTimeout(function () {
       that.$element.focus();
     }, 0);
+  };
+
+  /**
+   * Toggle modifiers when we are not interacting with drag objects.
+   * @param {boolean} [enable]
+   */
+  C.prototype.toggleModifiers = function (enable) {
+    this.disabledModifiers = enable === undefined ? !this.disabledModifiers : !enable;
   };
 
   /**
