@@ -425,6 +425,10 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     setTimeout(function () {
       that.$element.focus();
     }, 0);
+
+    // trigger to hide the transform panel unless it was activated
+    // through the context menu
+    that.trigger('hideTransformPanel');
   };
 
   /**
