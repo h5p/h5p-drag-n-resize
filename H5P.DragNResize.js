@@ -68,6 +68,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       }).mousedown(function (event) {
         that.lock = (options && options.lock);
         that.$element = $element;
+        that.noPosition = (options && options.hasDND === false);
         that.press(event.clientX, event.clientY, position);
       }).data('position', position)
         .appendTo($element);
@@ -289,8 +290,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     that.$element.css({
       width: (that.finalWidth / that.containerEm) + 'em',
       height: (that.finalHeight / that.containerEm) + 'em',
-      left: ((that.newLeft / that.containerWidth) * 100) + '%',
-      top: ((that.newTop / that.containerHeight) * 100) + '%'
+      left: (that.noPosition ? 0 : ((that.newLeft / that.containerWidth) * 100)) + '%',
+      top: (that.noPosition ? 0 : ((that.newTop / that.containerHeight) * 100)) + '%'
     });
 
     that.trigger('moveResizing');
