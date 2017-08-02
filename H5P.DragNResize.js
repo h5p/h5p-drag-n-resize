@@ -54,6 +54,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    * @param {H5P.jQuery} $element
    * @param {Object} [options]
    * @param {boolean} [options.lock]
+   * @param {boolean} [options.cornerLock]
    */
   C.prototype.add = function ($element, options) {
     var that = this;
@@ -62,11 +63,11 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     var cornerPositions = ['nw', 'ne', 'sw', 'se'];
     var edgePositions = ['n', 'w', 'e', 's'];
 
-    var addResizeHandle = function (position) {
+    var addResizeHandle = function (position, corner) {
       $('<div>', {
         'class': 'h5p-dragnresize-handle ' + position
       }).mousedown(function (event) {
-        that.lock = (options && options.lock);
+        that.lock = (options && (options.lock || corner && options.cornerLock));
         that.$element = $element;
         that.press(event.clientX, event.clientY, position);
       }).data('position', position)
@@ -74,7 +75,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     };
 
     cornerPositions.forEach(function (pos) {
-      addResizeHandle(pos);
+      addResizeHandle(pos, true);
     });
 
     // Add edge handles
