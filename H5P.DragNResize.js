@@ -68,6 +68,9 @@ H5P.DragNResize = (function ($, EventDispatcher) {
         'class': 'h5p-dragnresize-handle ' + position
       }).mousedown(function (event) {
         that.lock = (options && (options.lock || corner && options.cornerLock));
+        if (options.cornerLock) {
+          that.isImage = true;
+        }
         that.$element = $element;
         that.press(event.clientX, event.clientY, position);
       }).data('position', position)
@@ -176,6 +179,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     var that = event.data.instance;
     var moveW = (direction === 'nw' || direction === 'sw' || direction === 'w');
     var moveN = (direction === 'nw' || direction === 'ne' || direction === 'n');
+    var moveDiagonally = (direction === 'nw' || direction === 'ne' || direction === 'sw' || direction === 'se');
     var movesHorizontal = (direction === 'w' || direction === 'e');
     var movesVertical = (direction === 'n' || direction === 's');
     var deltaX = that.startX - event.clientX;
@@ -273,9 +277,9 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       that.newHeight = H5P.DragNResize.MIN_SIZE;
     }
 
-    // Apply ratio lock
+    // Apply ratio lock for elements except images, they have a their own specific for corner cases
     var lock = (that.revertLock ? !that.lock : that.lock);
-    if (lock) {
+    if (lock && (moveDiagonally || !that.isImage)) {
       that.lockDimensions(moveW, moveN, movesVertical, movesHorizontal);
     }
 
