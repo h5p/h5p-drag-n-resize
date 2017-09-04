@@ -54,6 +54,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    * @param {H5P.jQuery} $element
    * @param {Object} [options]
    * @param {boolean} [options.lock]
+   * @param {boolean} [options.cornerLock]
    */
   C.prototype.add = function ($element, options) {
     var that = this;
@@ -62,11 +63,14 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     var cornerPositions = ['nw', 'ne', 'sw', 'se'];
     var edgePositions = ['n', 'w', 'e', 's'];
 
-    var addResizeHandle = function (position) {
+    var addResizeHandle = function (position, corner) {
       $('<div>', {
         'class': 'h5p-dragnresize-handle ' + position
       }).mousedown(function (event) {
-        that.lock = (options && options.lock);
+        that.lock = (options && (options.lock || corner && options.cornerLock));
+        if (options.cornerLock) {
+          that.isImage = true;
+        }
         that.$element = $element;
         that.press(event.clientX, event.clientY, position);
       }).data('position', position)
@@ -74,7 +78,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     };
 
     cornerPositions.forEach(function (pos) {
-      addResizeHandle(pos);
+      addResizeHandle(pos, true);
     });
 
     // Add edge handles
@@ -175,6 +179,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     var that = event.data.instance;
     var moveW = (direction === 'nw' || direction === 'sw' || direction === 'w');
     var moveN = (direction === 'nw' || direction === 'ne' || direction === 'n');
+    var moveDiagonally = (direction === 'nw' || direction === 'ne' || direction === 'sw' || direction === 'se');
     var movesHorizontal = (direction === 'w' || direction === 'e');
     var movesVertical = (direction === 'n' || direction === 's');
     var deltaX = that.startX - event.clientX;
@@ -272,9 +277,9 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       that.newHeight = H5P.DragNResize.MIN_SIZE;
     }
 
-    // Apply ratio lock
+    // Apply ratio lock for elements except images, they have a their own specific for corner cases
     var lock = (that.revertLock ? !that.lock : that.lock);
-    if (lock) {
+    if (lock && (moveDiagonally || !that.isImage)) {
       that.lockDimensions(moveW, moveN, movesVertical, movesHorizontal);
     }
 
