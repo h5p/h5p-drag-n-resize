@@ -117,7 +117,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     return {
       horizontal: Number(this.$element.css('border-left-width').replace('px', '')) + Number(this.$element.css('border-right-width').replace('px', '')),
       vertical: Number(this.$element.css('border-top-width').replace('px', '')) + Number(this.$element.css('border-bottom-width').replace('px', ''))
-    }
+    };
   };
 
   C.prototype.setContainerEm = function (containerEm) {
@@ -289,7 +289,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
 
     // Apply ratio lock for elements except images, they have a their own specific for corner cases
     var lock = (that.revertLock ? !that.lock : that.lock);
-    if (lock && (moveDiagonally || !that.isImage)) {
+    if (lock && (moveDiagonally || !that.isImage)) {
       that.lockDimensions(moveW, moveN, movesVertical, movesHorizontal);
     }
 
@@ -452,16 +452,6 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    */
   C.prototype.toggleModifiers = function (enable) {
     this.disabledModifiers = enable === undefined ? !this.disabledModifiers : !enable;
-  };
-
-  /**
-   * Convert px value to number.
-   *
-   * @param {String} px
-   * @returns {Number}
-   */
-  var pxToNum = function (px) {
-    return Number(px.replace('px', ''));
   };
 
   C.MIN_SIZE = 24;
