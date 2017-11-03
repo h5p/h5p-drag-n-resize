@@ -61,7 +61,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
 
     // Array with position of handles
     var cornerPositions = ['nw', 'ne', 'sw', 'se'];
-    var edgePositions = ['n', 'w', 'e', 's'];
+    var horizontalEdgePositions = ['w', 'e'];
+    var verticalEdgePositions = ['n', 's'];
 
     var addResizeHandle = function (position, corner) {
       $('<div>', {
@@ -77,15 +78,24 @@ H5P.DragNResize = (function ($, EventDispatcher) {
         .appendTo($element);
     };
 
-    cornerPositions.forEach(function (pos) {
-      addResizeHandle(pos, true);
-    });
+    if (!options.directionLock) {
+      cornerPositions.forEach(function (pos) {
+        addResizeHandle(pos, true);
+      });
+    }
 
     // Add edge handles
     if (!options || !options.lock) {
-      edgePositions.forEach(function (pos) {
-        addResizeHandle(pos);
-      });
+      if (options.directionLock != "vertical") {
+        horizontalEdgePositions.forEach(function (pos) {
+          addResizeHandle(pos);
+        });
+      }
+      if (options.directionLock != "horizontal") {
+        verticalEdgePositions.forEach(function (pos) {
+          addResizeHandle(pos);
+        });
+      }
     }
   };
 
