@@ -278,15 +278,13 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       }
     }
 
-    if (that.$element.find('.h5p-shape-outer-element').length === 0) {
-      // Set min size
-      if (that.newWidth <= H5P.DragNResize.MIN_SIZE) {
-        that.newWidth = H5P.DragNResize.MIN_SIZE;
-      }
+    // Set min size
+    if (that.newWidth <= H5P.DragNResize.MIN_SIZE) {
+      that.newWidth = (that.$element.find('.h5p-shape-outer-element').length === 0 ? H5P.DragNResize.MIN_SIZE : 3);
+    }
 
-      if (that.newHeight <= H5P.DragNResize.MIN_SIZE) {
-        that.newHeight = H5P.DragNResize.MIN_SIZE;
-      }
+    if (that.newHeight <= H5P.DragNResize.MIN_SIZE) {
+      that.newHeight = (that.$element.find('.h5p-shape-outer-element').length === 0 ? H5P.DragNResize.MIN_SIZE : 3);
     }
 
     // Apply ratio lock for elements except images, they have a their own specific for corner cases
