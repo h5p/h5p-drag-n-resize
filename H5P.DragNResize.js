@@ -73,7 +73,7 @@ H5P.DragNResize = (function ($, EventDispatcher) {
           that.isImage = true;
         }
         that.$element = $element;
-        that.press(event.clientX, event.clientY, position);
+        that.press(event.clientX, event.clientY, position, options.minSize);
       }).data('position', position)
         .appendTo($element);
     };
@@ -96,6 +96,12 @@ H5P.DragNResize = (function ($, EventDispatcher) {
           addResizeHandle(pos);
         });
       }
+    }
+
+    if (options.minSize) {
+      H5P.DragNResize.MIN_SIZE = options.minSize;
+    } else {
+      H5P.DragNResize.MIN_SIZE = 24;
     }
   };
 
@@ -130,13 +136,16 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    * @param {number} x
    * @param {number} y
    * @param {String} [direction] Direction of resize
+   * @param {number} minSize
    */
-  C.prototype.press = function (x, y, direction) {
+  C.prototype.press = function (x, y, direction, minSize) {
     this.active = true;
     var eventData = {
       instance: this,
       direction: direction
     };
+
+    H5P.DragNResize.MIN_SIZE = (minSize ? minSize : 24);
 
     H5P.$window
       .bind('mouseup', eventData, C.release)
@@ -280,11 +289,11 @@ H5P.DragNResize = (function ($, EventDispatcher) {
 
     // Set min size
     if (that.newWidth <= H5P.DragNResize.MIN_SIZE) {
-      that.newWidth = (that.$element.find('.h5p-shape-outer-element').length === 0 ? H5P.DragNResize.MIN_SIZE : 3);
+      that.newWidth = H5P.DragNResize.MIN_SIZE;
     }
 
     if (that.newHeight <= H5P.DragNResize.MIN_SIZE) {
-      that.newHeight = (that.$element.find('.h5p-shape-outer-element').length === 0 ? H5P.DragNResize.MIN_SIZE : 3);
+      that.newHeight = H5P.DragNResize.MIN_SIZE;
     }
 
     // Apply ratio lock for elements except images, they have a their own specific for corner cases
