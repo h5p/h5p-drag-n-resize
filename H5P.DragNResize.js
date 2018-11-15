@@ -6,19 +6,10 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    *
    * @class H5P.DragNResize
    * @param {H5P.jQuery} $container
-   * @param {object} [options] Options.
-   * @param {number} [options.minWidth=H5P.DragNResize.MIN_SIZE] Minimum width for element.
-   * @param {number} [options.minHeight=H5P.DragNResize.MIN_SIZE] Minimum height for element.
    */
-  function C($container, options) {
+  function C($container) {
     var self = this;
     this.$container = $container;
-
-    this.options = $.extend({
-      minWidth: H5P.DragNResize.MIN_SIZE,
-      minHeight: H5P.DragNResize.MIN_SIZE
-    }, options !== undefined ? options : {});
-
     self.disabledModifiers = false;
 
     EventDispatcher.call(this);
@@ -297,12 +288,12 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     }
 
     // Set min size
-    if (that.newWidth <= that.options.minWidth) {
-      that.newWidth = that.options.minWidth;
+    if (that.newWidth <= H5P.DragNResize.MIN_SIZE) {
+      that.newWidth = H5P.DragNResize.MIN_SIZE;
     }
 
-    if (that.newHeight <= that.options.minHeight) {
-      that.newHeight = that.options.minHeight;
+    if (that.newHeight <= H5P.DragNResize.MIN_SIZE) {
+      that.newHeight = H5P.DragNResize.MIN_SIZE;
     }
 
     // Apply ratio lock for elements except images, they have a their own specific for corner cases
