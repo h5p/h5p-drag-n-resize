@@ -57,6 +57,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    * @param {Object} [options]
    * @param {boolean} [options.lock]
    * @param {boolean} [options.cornerLock]
+   * @param {string} [options.directionLock]
+   * @param {number} [options.minSize]
    */
   C.prototype.add = function ($element, options) {
     var that = this;
