@@ -12,6 +12,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     this.$container = $container;
     self.disabledModifiers = false;
 
+    this.minSize = H5P.DragNResize.MIN_SIZE;
+
     EventDispatcher.call(this);
 
     // Override settings for snapping to grid, and locking aspect ratio.
@@ -55,13 +57,16 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    * @param {Object} [options]
    * @param {boolean} [options.lock]
    * @param {boolean} [options.cornerLock]
+   * @param {string} [options.directionLock]
+   * @param {number} [options.minSize]
    */
   C.prototype.add = function ($element, options) {
     var that = this;
 
     // Array with position of handles
     var cornerPositions = ['nw', 'ne', 'sw', 'se'];
-    var edgePositions = ['n', 'w', 'e', 's'];
+    var horizontalEdgePositions = ['w', 'e'];
+    var verticalEdgePositions = ['n', 's'];
 
     var addResizeHandle = function (position, corner) {
       $('<div>', {
@@ -72,20 +77,36 @@ H5P.DragNResize = (function ($, EventDispatcher) {
           that.isImage = true;
         }
         that.$element = $element;
-        that.press(event.clientX, event.clientY, position);
+        that.press(event.clientX, event.clientY, position, options.minSize);
       }).data('position', position)
         .appendTo($element);
     };
 
-    cornerPositions.forEach(function (pos) {
-      addResizeHandle(pos, true);
-    });
+    if (!options.directionLock) {
+      cornerPositions.forEach(function (pos) {
+        addResizeHandle(pos, true);
+      });
+    }
 
     // Add edge handles
     if (!options || !options.lock) {
-      edgePositions.forEach(function (pos) {
-        addResizeHandle(pos);
-      });
+      if (options.directionLock != "vertical") {
+        horizontalEdgePositions.forEach(function (pos) {
+          addResizeHandle(pos);
+        });
+      }
+      if (options.directionLock != "horizontal") {
+        verticalEdgePositions.forEach(function (pos) {
+          addResizeHandle(pos);
+        });
+      }
+    }
+
+    if (options.minSize) {
+      this.minSize = options.minSize;
+    }
+    else {
+      this.minSize = H5P.DragNResize.MIN_SIZE;
     }
   };
 
@@ -120,13 +141,16 @@ H5P.DragNResize = (function ($, EventDispatcher) {
    * @param {number} x
    * @param {number} y
    * @param {String} [direction] Direction of resize
+   * @param {number} minSize
    */
-  C.prototype.press = function (x, y, direction) {
+  C.prototype.press = function (x, y, direction, minSize) {
     this.active = true;
     var eventData = {
       instance: this,
       direction: direction
     };
+
+    this.minSize = (minSize ? minSize : H5P.DragNResize.MIN_SIZE);
 
     H5P.$window
       .bind('mouseup', eventData, C.release)
@@ -185,8 +209,8 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     var deltaX = that.startX - event.clientX;
     var deltaY = that.startY - event.clientY;
 
-    that.minLeft = that.left + that.startWidth - H5P.DragNResize.MIN_SIZE;
-    that.minTop = that.top + that.startHeight - H5P.DragNResize.MIN_SIZE;
+    that.minLeft = that.left + that.startWidth - that.minSize;
+    that.minTop = that.top + that.startHeight - that.minSize;
 
     // Moving west
     if (moveW) {
@@ -269,12 +293,12 @@ H5P.DragNResize = (function ($, EventDispatcher) {
     }
 
     // Set min size
-    if (that.newWidth <= H5P.DragNResize.MIN_SIZE) {
-      that.newWidth = H5P.DragNResize.MIN_SIZE;
+    if (that.newWidth <= that.minSize) {
+      that.newWidth = that.minSize;
     }
 
-    if (that.newHeight <= H5P.DragNResize.MIN_SIZE) {
-      that.newHeight = H5P.DragNResize.MIN_SIZE;
+    if (that.newHeight <= that.minSize) {
+      that.newHeight = that.minSize;
     }
 
     // Apply ratio lock for elements except images, they have a their own specific for corner cases
@@ -330,18 +354,18 @@ H5P.DragNResize = (function ($, EventDispatcher) {
       this.newWidth = this.newHeight * this.ratio;
 
       // Make sure locked ratio does not cause size to go below min size
-      if (this.newWidth < H5P.DragNResize.MIN_SIZE) {
-        this.newWidth = H5P.DragNResize.MIN_SIZE;
-        this.newHeight = H5P.DragNResize.MIN_SIZE / this.ratio;
+      if (this.newWidth < this.minSize) {
+        this.newWidth = this.minSize;
+        this.newHeight = this.minSize / this.ratio;
       }
     }
     else if (movesHorizontal) {
       this.newHeight = this.newWidth / this.ratio;
 
       // Make sure locked ratio does not cause size to go below min size
-      if (this.newHeight < H5P.DragNResize.MIN_SIZE) {
-        this.newHeight = H5P.DragNResize.MIN_SIZE;
-        this.newWidth = H5P.DragNResize.MIN_SIZE * this.ratio;
+      if (this.newHeight < this.minSize) {
+        this.newHeight = this.minSize;
+        this.newWidth = this.minSize * this.ratio;
       }
     }
     else if (this.newWidth / this.startWidth > this.newHeight / this.startHeight) {
